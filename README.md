@@ -22,21 +22,12 @@ A comprehensive Laravel package for dynamic role and permission management with 
 
 ### 1. Install the Package
 
-Add to your main application's `composer.json`:
+Run on terminal:
 
-```json
-{
-    "repositories": [
-        {
-            "type": "path",
-            "url": "./packages/dynamic-roles"
-        }
-    ],
-    "require": {
-        "anwar/dynamic-roles": "*"
-    }
-}
+```bash
+composer require anwar/dynamic-roles
 ```
+Or add it on your main `composer.json`
 
 Then run:
 
