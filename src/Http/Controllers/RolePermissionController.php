@@ -5,7 +5,7 @@ namespace Anwar\DynamicRoles\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Gunma\DynamicRoles\Services\RolePermissionService;
+use Anwar\DynamicRoles\Services\RolePermissionService;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Validation\ValidationException;
