@@ -1,1 +1,0 @@
-{"version":2,"defects":[],"times":{"Ringkubd\\DynamicRoles\\Tests\\PackageStructureTest::test_package_structure_exists":0.004,"Ringkubd\\DynamicRoles\\Tests\\PackageStructureTest::test_composer_json_structure":0.001,"Ringkubd\\DynamicRoles\\Tests\\PackageStructureTest::test_config_file_structure":0.004}}

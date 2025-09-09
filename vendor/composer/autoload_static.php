@@ -97,8 +97,6 @@ class ComposerStaticInit8a3528ec37dc186c24fa19cbafbf77f6
         ),
         'R' => 
         array (
-            'Ringkubd\\DynamicRoles\\Tests\\' => 28,
-            'Ringkubd\\DynamicRoles\\' => 22,
             'Ramsey\\Uuid\\' => 12,
             'Ramsey\\Collection\\' => 18,
         ),
@@ -186,6 +184,11 @@ class ComposerStaticInit8a3528ec37dc186c24fa19cbafbf77f6
         'B' => 
         array (
             'Brick\\Math\\' => 11,
+        ),
+        'A' => 
+        array (
+            'Anwar\\DynamicRoles\\Tests\\' => 25,
+            'Anwar\\DynamicRoles\\' => 19,
         ),
     );
 
@@ -329,14 +332,6 @@ class ComposerStaticInit8a3528ec37dc186c24fa19cbafbf77f6
         'Spatie\\Permission\\' => 
         array (
             0 => __DIR__ . '/..' . '/spatie/laravel-permission/src',
-        ),
-        'Ringkubd\\DynamicRoles\\Tests\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/tests',
-        ),
-        'Ringkubd\\DynamicRoles\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src',
         ),
         'Ramsey\\Uuid\\' => 
         array (
@@ -545,6 +540,14 @@ class ComposerStaticInit8a3528ec37dc186c24fa19cbafbf77f6
         'Brick\\Math\\' => 
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
+        ),
+        'Anwar\\DynamicRoles\\Tests\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/tests',
+        ),
+        'Anwar\\DynamicRoles\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
         ),
     );
 

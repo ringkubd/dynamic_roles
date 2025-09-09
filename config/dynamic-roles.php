@@ -3,6 +3,17 @@
 return [
     /*
     |--------------------------------------------------------------------------
+    | Routes Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configure which routes to load
+    |
+    */
+    'enable_api_routes' => env('DYNAMIC_ROLES_ENABLE_API_ROUTES', true),
+    'enable_web_routes' => env('DYNAMIC_ROLES_ENABLE_WEB_ROUTES', true),
+
+    /*
+    |--------------------------------------------------------------------------
     | Table Names Configuration
     |--------------------------------------------------------------------------
     |

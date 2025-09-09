@@ -29,6 +29,7 @@ class DynamicRolesServiceProvider extends ServiceProvider
         $this->publishConfig();
         $this->publishMigrations();
         $this->loadRoutes();
+        $this->loadViews();
         $this->registerMiddleware();
         $this->registerCommands();
     }
@@ -84,6 +85,22 @@ class DynamicRolesServiceProvider extends ServiceProvider
         if (config('dynamic-roles.enable_api_routes', true)) {
             $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
         }
+        
+        if (config('dynamic-roles.enable_web_routes', true)) {
+            $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+        }
+    }
+
+    /**
+     * Load package views.
+     */
+    protected function loadViews(): void
+    {
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'dynamic-roles');
+        
+        $this->publishes([
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/dynamic-roles'),
+        ], 'dynamic-roles-views');
     }
 
     /**
