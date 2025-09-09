@@ -1,0 +1,39 @@
+site_name: Dynamic Roles Documentation
+site_description: Documentation for Dynamic Roles Laravel Package and Next.js Client
+repo_url: https://github.com/ringkubd/dynamic_roles
+theme:
+  name: material
+  palette:
+    primary: blue
+    accent: light blue
+nav:
+  - Home: index.md
+  - Laravel Backend:
+      - Installation: installation.md
+      - Usage Examples: usage.md
+      - API Reference: api.md
+      - Configuration: configuration.md
+      - Menu Management: menu.md
+      - Changelog: changelog.md
+      - Completion Summary: completion_summary.md
+      - Project Complete: project_complete.md
+  - Next.js Client:
+      - Overview: nextjs/overview.md
+      - Quick Start: nextjs/quick_start.md
+      - React Hooks: nextjs/hooks.md
+      - Example Usage: nextjs/examples.md
+      - Project Complete: nextjs/project_complete.md
+  - About: about.md
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - toc:
+      permalink: true
+  - footnotes
+  - tables
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/ringkubd/dynamic_roles
