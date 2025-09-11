@@ -63,7 +63,7 @@ Add to `config/app.php`:
 ```php
 'providers' => [
     // ...
-    Gunma\DynamicRoles\DynamicRolesServiceProvider::class,
+    Anwar\DynamicRoles\DynamicRolesServiceProvider::class,
 ],
 ```
 
@@ -129,7 +129,7 @@ The package publishes a configuration file at `config/dynamic-roles.php`. Key se
 #### 1. Register URLs with Permissions
 
 ```php
-use Gunma\DynamicRoles\Facades\DynamicRoles;
+use \DynamicRoles\Facades\DynamicRoles;
 
 // Register a URL with specific permissions
 DynamicRoles::registerUrl(
@@ -169,7 +169,7 @@ Route::middleware(['dynamic.role:admin,manager'])->group(function () {
 #### 3. Programmatic Permission Checks
 
 ```php
-use Gunma\DynamicRoles\Services\UrlPermissionService;
+use \DynamicRoles\Services\UrlPermissionService;
 
 $urlPermissionService = app(UrlPermissionService::class);
 
@@ -355,7 +355,7 @@ Configure auto-discovery patterns in `config/dynamic-roles.php`:
 #### 3. Bulk Operations
 
 ```php
-use Gunma\DynamicRoles\Services\RolePermissionService;
+use \DynamicRoles\Services\RolePermissionService;
 
 $rolePermissionService = app(RolePermissionService::class);
 
@@ -417,7 +417,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Gunma\DynamicRoles\Facades\DynamicRoles;
+use Anwar\DynamicRoles\Facades\DynamicRoles;
 
 class PermissionTest extends TestCase
 {
