@@ -29,7 +29,7 @@ else
 fi
 
 # Add the package to composer.json if not already added
-if ! grep -q "gunma/dynamic-roles" composer.json; then
+if ! grep -q "anwar/dynamic-roles" composer.json; then
     echo "📝 Adding package repository to composer.json..."
     
     # Create backup
