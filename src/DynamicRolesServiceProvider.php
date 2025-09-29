@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Anwar\DynamicRoles\Commands\{
     SyncPermissionsCommand,
     ClearCacheCommand,
+    ClearMenuCacheCommand,
     PublishConfigCommand
 };
 use Anwar\DynamicRoles\Middleware\{
@@ -85,7 +86,7 @@ class DynamicRolesServiceProvider extends ServiceProvider
         if (config('dynamic-roles.enable_api_routes', true)) {
             $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
         }
-        
+
         if (config('dynamic-roles.enable_web_routes', true)) {
             $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
         }
@@ -97,7 +98,7 @@ class DynamicRolesServiceProvider extends ServiceProvider
     protected function loadViews(): void
     {
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'dynamic-roles');
-        
+
         $this->publishes([
             __DIR__ . '/../resources/views' => resource_path('views/vendor/dynamic-roles'),
         ], 'dynamic-roles-views');
@@ -123,6 +124,7 @@ class DynamicRolesServiceProvider extends ServiceProvider
             $this->commands([
                 SyncPermissionsCommand::class,
                 ClearCacheCommand::class,
+                ClearMenuCacheCommand::class,
                 PublishConfigCommand::class,
             ]);
         }

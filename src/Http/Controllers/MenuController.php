@@ -36,8 +36,8 @@ class MenuController extends Controller
             if ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
-                      ->orWhere('label', 'like', "%{$search}%")
-                      ->orWhere('description', 'like', "%{$search}%");
+                        ->orWhere('label', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
                 });
             }
 
@@ -145,6 +145,93 @@ class MenuController extends Controller
     }
 
     /**
+     * Create multiple menus at once
+     */
+    public function storeBulk(Request $request): JsonResponse
+    {
+        try {
+            $validated = $request->validate([
+                'menus' => 'required|array|min:1|max:50', // Limit to 50 menus at once
+                'menus.*.name' => 'required|string|max:255',
+                'menus.*.label' => 'required|string|max:255',
+                'menus.*.url' => 'nullable|string|max:500',
+                'menus.*.icon' => 'nullable|string|max:255',
+                'menus.*.route_name' => 'nullable|string|max:255',
+                'menus.*.route_params' => 'nullable|array',
+                'menus.*.parent_id' => 'nullable|exists:' . config('dynamic-roles.table_names.dynamic_menus', 'dynamic_menus') . ',id',
+                'menus.*.sort_order' => 'nullable|integer|min:0',
+                'menus.*.is_active' => 'nullable|boolean',
+                'menus.*.is_visible' => 'nullable|boolean',
+                'menus.*.description' => 'nullable|string',
+                'menus.*.metadata' => 'nullable|array',
+                'menus.*.permissions' => 'nullable|array',
+                'menus.*.permissions.*' => 'exists:permissions,id',
+                'menus.*.roles' => 'nullable|array',
+                'menus.*.roles.*' => 'exists:roles,id',
+            ]);
+
+            // Check for unique names within the batch
+            $menuNames = array_column($validated['menus'], 'name');
+            $duplicateNames = array_diff_key($menuNames, array_unique($menuNames));
+
+            if (!empty($duplicateNames)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Duplicate menu names found in the request',
+                    'errors' => ['menus' => 'Menu names must be unique within the batch']
+                ], 422);
+            }
+
+            // Check for existing menu names in database
+            $existingNames = DynamicMenu::whereIn('name', $menuNames)->pluck('name')->toArray();
+            if (!empty($existingNames)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Some menu names already exist in the database',
+                    'errors' => [
+                        'menus' => 'The following menu names already exist: ' . implode(', ', $existingNames)
+                    ]
+                ], 422);
+            }
+
+            $result = $this->menuService->createMultipleMenus($validated['menus']);
+
+            if ($result['success']) {
+                return response()->json([
+                    'success' => true,
+                    'data' => $result['created_menus'],
+                    'meta' => [
+                        'total_created' => $result['total_created'],
+                        'total_requested' => count($validated['menus'])
+                    ],
+                    'message' => "Successfully created {$result['total_created']} menus"
+                ], 201);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => $result['message'] ?? 'Failed to create menus',
+                    'errors' => $result['errors'],
+                    'meta' => [
+                        'total_created' => $result['total_created'],
+                        'total_requested' => count($validated['menus'])
+                    ]
+                ], 422);
+            }
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create menus: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Get a specific menu
      */
     public function show(DynamicMenu $menu): JsonResponse
@@ -218,7 +305,7 @@ class MenuController extends Controller
     {
         try {
             $deleteChildren = $request->get('delete_children', true);
-            
+
             $this->menuService->deleteMenu($menu, $deleteChildren);
 
             return response()->json([

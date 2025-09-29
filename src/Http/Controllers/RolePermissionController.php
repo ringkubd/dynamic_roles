@@ -33,7 +33,6 @@ class RolePermissionController extends Controller
                 'data' => $roles,
                 'message' => 'Roles retrieved successfully'
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -56,7 +55,6 @@ class RolePermissionController extends Controller
                 'data' => $permissions,
                 'message' => 'Permissions retrieved successfully'
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -92,14 +90,12 @@ class RolePermissionController extends Controller
                 'data' => $role->load('permissions'),
                 'message' => 'Role created successfully'
             ], 201);
-
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
                 'errors' => $e->errors()
             ], 422);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -115,9 +111,22 @@ class RolePermissionController extends Controller
     {
         try {
             $validated = $request->validate([
-                'name' => 'required|string|unique:permissions,name|max:255',
+                'name' => 'required|string|max:255',
                 'guard_name' => 'string|max:255',
             ]);
+
+            // Check if the permission already exists
+            $existingPermission = Permission::where('name', $validated['name'])
+                ->where('guard_name', $validated['guard_name'] ?? config('auth.defaults.guard'))
+                ->first();
+
+            if ($existingPermission) {
+                return response()->json([
+                    'success' => true,
+                    'data' => $existingPermission,
+                    'message' => 'Permission already exists'
+                ], 200);
+            }
 
             $permission = $this->rolePermissionService->createPermission(
                 $validated['name'],
@@ -129,14 +138,12 @@ class RolePermissionController extends Controller
                 'data' => $permission,
                 'message' => 'Permission created successfully'
             ], 201);
-
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
                 'errors' => $e->errors()
             ], 422);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -164,14 +171,12 @@ class RolePermissionController extends Controller
                 'data' => $role->load('permissions'),
                 'message' => 'Permissions assigned successfully'
             ]);
-
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
                 'errors' => $e->errors()
             ], 422);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -199,14 +204,12 @@ class RolePermissionController extends Controller
                 'data' => $role->load('permissions'),
                 'message' => 'Permissions removed successfully'
             ]);
-
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
                 'errors' => $e->errors()
             ], 422);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -228,7 +231,7 @@ class RolePermissionController extends Controller
 
             $userModel = config('auth.providers.users.model');
             $user = $userModel::findOrFail($validated['user_id']);
-            
+
             $this->rolePermissionService->assignRoleToUser($user, $validated['role']);
 
             return response()->json([
@@ -240,14 +243,12 @@ class RolePermissionController extends Controller
                 ],
                 'message' => 'Role assigned successfully'
             ]);
-
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
                 'errors' => $e->errors()
             ], 422);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -269,7 +270,7 @@ class RolePermissionController extends Controller
 
             $userModel = config('auth.providers.users.model');
             $user = $userModel::findOrFail($validated['user_id']);
-            
+
             $this->rolePermissionService->removeRoleFromUser($user, $validated['role']);
 
             return response()->json([
@@ -281,14 +282,12 @@ class RolePermissionController extends Controller
                 ],
                 'message' => 'Role removed successfully'
             ]);
-
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
                 'errors' => $e->errors()
             ], 422);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -305,7 +304,7 @@ class RolePermissionController extends Controller
         try {
             $userModel = config('auth.providers.users.model');
             $user = $userModel::findOrFail($userId);
-            
+
             $permissions = $this->rolePermissionService->getUserPermissions($user);
 
             return response()->json([
@@ -317,7 +316,6 @@ class RolePermissionController extends Controller
                 ],
                 'message' => 'User permissions retrieved successfully'
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -344,7 +342,6 @@ class RolePermissionController extends Controller
                 ],
                 'message' => 'Role permissions retrieved successfully'
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -370,14 +367,12 @@ class RolePermissionController extends Controller
                 'success' => true,
                 'message' => 'Permissions assigned successfully to all roles'
             ]);
-
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
                 'errors' => $e->errors()
             ], 422);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -399,7 +394,6 @@ class RolePermissionController extends Controller
                 'data' => $stats,
                 'message' => 'Permission statistics retrieved successfully'
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -421,7 +415,6 @@ class RolePermissionController extends Controller
                 'data' => $config,
                 'message' => 'Configuration exported successfully'
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -448,14 +441,12 @@ class RolePermissionController extends Controller
                 'success' => true,
                 'message' => 'Configuration imported successfully'
             ]);
-
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
                 'errors' => $e->errors()
             ], 422);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

@@ -21,7 +21,7 @@ $middleware = config('dynamic-roles.api.middleware', ['api', 'auth:sanctum']);
 Route::prefix($prefix)
     ->middleware($middleware)
     ->group(function () {
-        
+
         /*
         |--------------------------------------------------------------------------
         | URL Permission Management Routes
@@ -30,25 +30,25 @@ Route::prefix($prefix)
         Route::prefix('urls')->group(function () {
             Route::get('/', [UrlPermissionController::class, 'index'])
                 ->name('dynamic-roles.urls.index');
-            
+
             Route::post('/', [UrlPermissionController::class, 'store'])
                 ->name('dynamic-roles.urls.store');
-            
+
             Route::get('/{id}', [UrlPermissionController::class, 'show'])
                 ->name('dynamic-roles.urls.show');
-            
+
             Route::put('/{id}', [UrlPermissionController::class, 'update'])
                 ->name('dynamic-roles.urls.update');
-            
+
             Route::delete('/{id}', [UrlPermissionController::class, 'destroy'])
                 ->name('dynamic-roles.urls.destroy');
-            
+
             Route::post('/check-permission', [UrlPermissionController::class, 'checkPermission'])
                 ->name('dynamic-roles.urls.check-permission');
-            
+
             Route::post('/auto-discover', [UrlPermissionController::class, 'autoDiscover'])
                 ->name('dynamic-roles.urls.auto-discover');
-            
+
             Route::patch('/bulk-update', [UrlPermissionController::class, 'bulkUpdate'])
                 ->name('dynamic-roles.urls.bulk-update');
         });
@@ -61,16 +61,16 @@ Route::prefix($prefix)
         Route::prefix('roles')->group(function () {
             Route::get('/', [RolePermissionController::class, 'roles'])
                 ->name('dynamic-roles.roles.index');
-            
+
             Route::post('/', [RolePermissionController::class, 'createRole'])
                 ->name('dynamic-roles.roles.store');
-            
+
             Route::post('/{roleId}/permissions', [RolePermissionController::class, 'assignPermissions'])
                 ->name('dynamic-roles.roles.assign-permissions');
-            
+
             Route::delete('/{roleId}/permissions', [RolePermissionController::class, 'removePermissions'])
                 ->name('dynamic-roles.roles.remove-permissions');
-            
+
             Route::get('/{roleId}/permissions', [RolePermissionController::class, 'rolePermissions'])
                 ->name('dynamic-roles.roles.permissions');
         });
@@ -78,7 +78,7 @@ Route::prefix($prefix)
         Route::prefix('permissions')->group(function () {
             Route::get('/', [RolePermissionController::class, 'permissions'])
                 ->name('dynamic-roles.permissions.index');
-            
+
             Route::post('/', [RolePermissionController::class, 'createPermission'])
                 ->name('dynamic-roles.permissions.store');
         });
@@ -91,10 +91,10 @@ Route::prefix($prefix)
         Route::prefix('users')->group(function () {
             Route::post('/assign-role', [RolePermissionController::class, 'assignRole'])
                 ->name('dynamic-roles.users.assign-role');
-            
+
             Route::post('/remove-role', [RolePermissionController::class, 'removeRole'])
                 ->name('dynamic-roles.users.remove-role');
-            
+
             Route::get('/{userId}/permissions', [RolePermissionController::class, 'userPermissions'])
                 ->name('dynamic-roles.users.permissions');
         });
@@ -116,13 +116,13 @@ Route::prefix($prefix)
         */
         Route::get('/stats', [RolePermissionController::class, 'stats'])
             ->name('dynamic-roles.stats');
-        
+
         Route::get('/export', [RolePermissionController::class, 'export'])
             ->name('dynamic-roles.export');
-        
+
         Route::post('/import', [RolePermissionController::class, 'import'])
             ->name('dynamic-roles.import');
-        
+
         /*
         |--------------------------------------------------------------------------
         | Menu Management Routes
@@ -131,31 +131,34 @@ Route::prefix($prefix)
         Route::prefix('menus')->group(function () {
             Route::get('/', [MenuController::class, 'index'])
                 ->name('dynamic-roles.menus.index');
-            
+
             Route::get('/tree', [MenuController::class, 'tree'])
                 ->name('dynamic-roles.menus.tree');
-            
+
             Route::post('/', [MenuController::class, 'store'])
                 ->name('dynamic-roles.menus.store');
-            
+
+            Route::post('/bulk', [MenuController::class, 'storeBulk'])
+                ->name('dynamic-roles.menus.store-bulk');
+
             Route::get('/{menu}', [MenuController::class, 'show'])
                 ->name('dynamic-roles.menus.show');
-            
+
             Route::put('/{menu}', [MenuController::class, 'update'])
                 ->name('dynamic-roles.menus.update');
-            
+
             Route::delete('/{menu}', [MenuController::class, 'destroy'])
                 ->name('dynamic-roles.menus.destroy');
-            
+
             Route::get('/{menu}/breadcrumbs', [MenuController::class, 'breadcrumbs'])
                 ->name('dynamic-roles.menus.breadcrumbs');
-            
+
             Route::post('/reorder', [MenuController::class, 'reorder'])
                 ->name('dynamic-roles.menus.reorder');
-            
+
             Route::post('/{menu}/assign-permissions', [MenuController::class, 'assignPermissions'])
                 ->name('dynamic-roles.menus.assign-permissions');
-            
+
             Route::post('/{menu}/assign-roles', [MenuController::class, 'assignRoles'])
                 ->name('dynamic-roles.menus.assign-roles');
         });
@@ -180,14 +183,14 @@ Route::prefix($prefix . '/public')
                 'user_id' => 'nullable|integer',
             ]);
 
-            $urlPermissionService = app(\Ringkubd\DynamicRoles\Services\UrlPermissionService::class);
-            
+            $urlPermissionService = app(\Anwar\DynamicRoles\Services\UrlPermissionService::class);
+
             if ($validated['user_id']) {
                 $userModel = config('auth.providers.users.model');
                 $user = $userModel::find($validated['user_id']);
                 $hasAccess = $urlPermissionService->checkUrlPermission(
-                    $user, 
-                    $validated['url'], 
+                    $user,
+                    $validated['url'],
                     $validated['method']
                 );
             } else {
@@ -207,7 +210,7 @@ Route::prefix($prefix . '/public')
         })->name('dynamic-roles.public.check-url-access');
 
         Route::get('/url-patterns', function () {
-            $urls = \Ringkubd\DynamicRoles\Models\DynamicUrl::where('is_active', true)
+            $urls = \Anwar\DynamicRoles\Models\DynamicUrl::where('is_active', true)
                 ->select(['url', 'method', 'name', 'category'])
                 ->get();
 
